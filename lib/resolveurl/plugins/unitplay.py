@@ -35,10 +35,11 @@ class UnitPlayResolver(ResolveUrl):
         html = self.net.http_GET(web_url, headers=headers).content
         
         if html:
-            player_id = re.search('''SvplayerID\|([a-z0-9]+)''', html, re.I)
+            player_id = re.search('idS.*?\|(.*?)\|Svplayer', html, re.I)
             if player_id:
+               
                 player_url = 'https://unitplay.net//CallPlayer'
-                data = {'id': player_id.group(1)}
+                data = {'id': player_id.group(1).replace('SvplayerID|','').replace('pLayFilm|','')}
                 headers.update({'Referer': web_url})
                 _html = self.net.http_POST(player_url, data, headers=headers).content
                 if _html:
